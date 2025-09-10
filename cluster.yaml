@@ -1,0 +1,42 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: status-page-cluster
+  region: us-east-1
+  version: "1.33"
+  tags:
+    Project: DevOpsFinalWorkshop
+    Owner: eliav-itai
+iam:
+  withOIDC: true
+cloudWatch:
+  clusterLogging:
+    enableTypes: ["audit", "api", "authenticator", "controllerManager", "scheduler"]
+    logRetentionInDays: 3
+
+
+managedNodeGroups:
+  - name: workers-ng
+    instanceType: t3.large # for testing; change to r6g.large for final
+    desiredCapacity: 3
+    minSize: 1
+    maxSize: 3
+    volumeSize: 40
+    volumeEncrypted: true
+    labels:
+      role: worker
+    tags:
+      Environment: prod
+      Owner: eliav-itai
+    iam:
+      withAddonPolicies:
+        albIngress: true
+        certManager: true
+        autoScaler: true
+
+addons:
+  - name: vpc-cni
+    version: latest
+  - name: kube-proxy
+    version: latest
