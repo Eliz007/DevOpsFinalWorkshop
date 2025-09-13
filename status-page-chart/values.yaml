@@ -1,0 +1,43 @@
+replicaCount: 3
+
+image:
+  repository: <aws_account_id>.dkr.ecr.us-east-1.amazonaws.com/status-page
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: true
+  className: alb
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+  hosts:
+    - host: status-page.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: [] # later use cert-manager + Let's Encrypt
+
+resources: {}
+
+env:
+  - name: DATABASE_URL
+    valueFrom:
+      secretKeyRef:
+        name: status-page-secrets
+        key: database_url
+  - name: REDIS_URL
+    valueFrom:
+      secretKeyRef:
+        name: status-page-secrets
+        key: redis_url
+  - name: SECRET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: status-page-secrets
+        key: secret_key
