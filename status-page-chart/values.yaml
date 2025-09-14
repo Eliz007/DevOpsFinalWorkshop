@@ -1,7 +1,7 @@
 replicaCount: 3
 
 image:
-  repository: <aws_account_id>.dkr.ecr.us-east-1.amazonaws.com/status-page
+  repository: 992382545251.dkr.ecr.us-east-1.amazonaws.com/ei-status_page:latest
   tag: "latest"
   pullPolicy: IfNotPresent
 
