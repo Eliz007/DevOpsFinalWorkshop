@@ -2,7 +2,7 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: status-page-cluster
+  name: ei-status-page-cluster
   region: us-east-1
   version: "1.33"
   tags:
@@ -10,10 +10,10 @@ metadata:
     Owner: eliav-itai
 iam:
   withOIDC: true
-cloudWatch:
-  clusterLogging:
-    enableTypes: ["audit", "api", "authenticator", "controllerManager", "scheduler"]
-    logRetentionInDays: 3
+#cloudWatch:
+ # clusterLogging:
+  #  enableTypes: ["audit", "api", "authenticator", "controllerManager", "scheduler"]
+    #logRetentionInDays: 3
 
 
 managedNodeGroups:
