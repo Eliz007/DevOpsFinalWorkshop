@@ -1,20 +1,33 @@
+# Base image עם Python 3.10
 FROM python:3.10-slim
 
-WORKDIR .
+# משתני סביבה לדאנג'ו
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
+# התקנת תלויות מערכת נדרשות
 RUN apt-get update && apt-get install -y \
-    build-essential libpq-dev gcc && \
-    rm -rf /var/lib/apt/lists/*
+    build-essential \
+    libpq-dev \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# הגדרת תיקיית עבודה
+WORKDIR /opt/status-page-app
 
-COPY . .
+# התקנת דרישות
+COPY requirements.txt /opt/status-page-app/
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
-RUN useradd -m status
-USER status
+# העתקת כל קבצי הפרויקט
+COPY . /opt/status-page-app
 
-EXPOSE 8000 8001
+# Expose פורט 8000
+EXPOSE 8000
 
-CMD ["gunicorn", "statuspage.wsgi:application", "--bind", "0.0.0.0:8000", "--access-logfile", "-", "--error-logfile", "-", "--workers", "3"]
+# Entrypoint script (כדי להריץ migrate ו־collectstatic)
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
+ENTRYPOINT ["/entrypoint.sh"]
