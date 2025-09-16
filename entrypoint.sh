@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e  # עוצר את הסקריפט אם יש טעות
+set -e
 
 cd /opt/status-page-app/statuspage/
 
