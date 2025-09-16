@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis
-  namespace: ei-statuspage-db
+  namespace: ei-status-page-db
 spec:
   replicas: 1
   selector:
