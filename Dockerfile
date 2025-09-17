@@ -1,10 +1,10 @@
-ן# Use official Python image
+# Use official Python image
 FROM python:3.12-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy requirements and install
+# Copy requirements first (for better layer caching)
 COPY requirements.txt .
 
 # Install system dependencies
@@ -16,16 +16,16 @@ RUN apt-get update && apt-get install -y \
     libyaml-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install
+# Upgrade pip and install Python dependencies
 RUN pip install --upgrade pip setuptools wheel cython
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project code
 COPY . .
 
-# Expose port
+# Expose application port
 EXPOSE 8000
 
-# Command to run
+# Command to run the app with Gunicorn
 CMD ["gunicorn", "myapp.wsgi:application", "--bind", "0.0.0.0:8000"]
 
