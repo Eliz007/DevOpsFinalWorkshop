@@ -16,9 +16,11 @@ RUN apt-get update && apt-get install -y \
     libyaml-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip and install Python dependencies
-RUN pip install --upgrade pip setuptools wheel cython
-RUN pip install --no-cache-dir -r requirements.txt
+# Upgrade pip, setuptools, wheel, cython
+RUN pip install --upgrade --force-reinstall pip setuptools wheel cython
+
+# Install Python dependencies using only pre-built wheels
+RUN pip install --no-cache-dir --only-binary :all: -r requirements.txt
 
 # Copy project code
 COPY . .
