@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: statuspage
-  namespace: itai-eks
+  namespace: namespace: itai-statuspage-db
 spec:
   replicas: 1
   selector:
