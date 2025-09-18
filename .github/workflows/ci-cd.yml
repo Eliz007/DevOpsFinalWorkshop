@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - "itai"
+      - "*"
 
 jobs:
   build-and-deploy:
@@ -56,7 +56,7 @@ jobs:
       
       - name: Update kubeconfig
         run: |
-          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.EKS_CLUSTER_NAME }}
+          aws eks update-kubeconfig --region us-east-1 --name my-amazing-cluster
 
         
       - name: Deploy to EKS
