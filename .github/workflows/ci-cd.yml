@@ -56,7 +56,7 @@ jobs:
       
       - name: Update kubeconfig
         run: |
-          aws eks update-kubeconfig --region us-east-1 --name ${{ secrets.EKS_CLUSTER_NAME }}
+          aws eks update-kubeconfig --region us-east-1 --name ei-status-page-cluster
 
         
       - name: Deploy to EKS
