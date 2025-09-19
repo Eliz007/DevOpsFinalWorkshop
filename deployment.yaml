@@ -18,4 +18,12 @@ spec:
         image: 123456789012.dkr.ecr.us-east-1.amazonaws.com/ei-status_page:latest
         ports:
         - containerPort: 8000
+- name: Add Prometheus Helm repo
+  run: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts && helm repo update
+
+- name: Install Prometheus (kube-prometheus-stack)
+  run: |
+    helm upgrade --install kube-prometheus prometheus-community/kube-prometheus-stack \
+      --namespace monitoring --create-namespace
+
 
