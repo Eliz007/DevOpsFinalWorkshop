@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: statuspage
-  namespace: namespace: itai-statuspage-db
+  namespace: statuspage
 spec:
   replicas: 1
   selector:
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: statuspage
-        image: 123456789012.dkr.ecr.us-east-1.amazonaws.com/ei-status_page:latest
+        image: 992382545251.dkr.ecr.us-east-1.amazonaws.com/ei-status_page
         ports:
         - containerPort: 8000
 - name: Add Prometheus Helm repo
