@@ -1,0 +1,11 @@
+apiVersion: v2
+name: status-page
+description: A Helm chart for Status-Page application on Kubernetes
+type: application
+version: 1.0.0
+appVersion: "2.0.17"
+keywords:
+  - status-page
+  - monitoring
+  - django
+  - python

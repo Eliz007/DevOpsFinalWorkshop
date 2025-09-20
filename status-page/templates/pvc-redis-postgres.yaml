@@ -1,0 +1,32 @@
+{{- if .Values.postgres }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  labels:
+    app: {{ include "statuspage.name" . }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.postgres.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.postgres.size }}
+---
+{{- end }}
+
+{{- if .Values.redis }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc
+  labels:
+    app: {{ include "statuspage.name" . }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.redis.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.redis.size }}
+{{- end }}
