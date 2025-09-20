@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: statuspage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: statuspage
+  template:
+    metadata:
+      labels:
+        app: statuspage
+    spec:
+      containers:
+        - name: statuspage
+          image: {{ .Values.app.image }}
+          command:
+            - sh
+            - -c
+            - |
+              cd /app/statuspage && \
+              python manage.py migrate --no-input && \
+              python manage.py runserver 0.0.0.0:8000 --insecure
+          env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: statuspage.settings
+            - name: STATUS_PAGE_CONFIGURATION
+              value: statuspage.configuration
+            - name: DATABASE_HOST
+              value: statuspage-status-page-postgres
+            - name: DATABASE_PORT
+              value: "5432"
+            - name: DATABASE_NAME
+              value: {{ .Values.postgres.db }}
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: statuspage-postgres
+                  key: POSTGRES_USER
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: statuspage-postgres
+                  key: POSTGRES_PASSWORD
+            - name: REDIS_TASKS_HOST
+              value: statuspage-status-page-redis.statuspage.svc.cluster.local
+            - name: REDIS_CACHING_HOST
+              value: statuspage-status-page-redis.statuspage.svc.cluster.local
+            - name: REDIS_HOST
+              value: statuspage-status-page-redis
+            - name: REDIS_PORT
+              value: "6379"
+            - name: SITE_URL
+              value: {{ .Values.app.siteUrl }}
+            - name: ALLOWED_HOSTS
+              value: "*"
+          ports:
+            - containerPort: {{ .Values.app.port }}
+          volumeMounts:
+            - name: media
+              mountPath: /app/statuspage/media
+      volumes:
+        - name: media
+          persistentVolumeClaim:
+            claimName: media-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.efs.mediaSize }}
+  storageClassName: {{ .Values.efs.storageClass }}
