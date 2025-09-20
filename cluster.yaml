@@ -1,0 +1,43 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: ei-test
+  region: us-east-1
+  version: "1.33"
+  tags:
+    Project: DevOpsFinalWorkshop
+    Owner: eliav-itai
+iam:
+  withOIDC: true
+
+managedNodeGroups:
+  - name: workers-ng
+    instanceType: t3.large # for testing; change to r6g.large for final
+    desiredCapacity: 1
+    minSize: 1
+    maxSize: 1
+    volumeSize: 30
+    volumeEncrypted: true
+    labels:
+      role: worker
+    tags:
+      Environment: prod
+      Owner: eliav-itai
+    iam:
+      withAddonPolicies:
+        albIngress: true
+        autoScaler: true
+        ebs: true  # Required for EBS CSI driver
+
+addons:
+  - name: vpc-cni
+    version: latest
+  - name: kube-proxy
+    version: latest
+  - name: coredns
+    version: latest
+  - name: aws-ebs-csi-driver
+    version: latest
+    wellKnownPolicies:
+      ebsCSIController: true
