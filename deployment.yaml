@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: statuspage
-  namespace: statuspage
+  namespace: ei-statuspage-db
 spec:
   replicas: 1
   selector:
