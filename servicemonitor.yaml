@@ -11,7 +11,7 @@ spec:
       app: statuspage               
   namespaceSelector:
     matchNames:
-      - itai-statuspage-db          
+      - default          
   endpoints:
     - port: http
       path: /metrics
